@@ -17,6 +17,8 @@ public class Player {
     }
 
     public static void showdown(JsonElement game) {
+        System.err.println("LOG TEST");
+        System.err.println(game.toString());
     }
 
     private static int getRaiseValue(GameState gameState, int defaultBet) {
