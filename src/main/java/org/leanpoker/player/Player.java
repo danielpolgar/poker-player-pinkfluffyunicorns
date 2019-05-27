@@ -28,12 +28,10 @@ public class Player {
         }
         relevantCards.addAll(Arrays.asList(gameState.players[gameState.in_action].hole_cards));
         if (relevantCards.size() == 2) {
-            if (relevantCards.get(0).getValue() >= 10 &&
-                    (relevantCards.get(0).rank.equals(relevantCards.get(1).rank))
-            ){
-                return gameState.players[gameState.in_action].stack;
-            }
-            else {
+            if (!((relevantCards.get(0).rank.equals(relevantCards.get(1).rank))
+                    || (relevantCards.get(0).suit.equals(relevantCards.get(1).suit))
+                    || (relevantCards.get(0).getValue() >= 10 && relevantCards.get(1).getValue() >= 10)))
+            {
                 return 0;
             }
         }
