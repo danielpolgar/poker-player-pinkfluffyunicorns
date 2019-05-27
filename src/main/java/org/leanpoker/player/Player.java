@@ -7,7 +7,7 @@ import java.util.*;
 
 public class Player {
 
-    static final String VERSION = "0.3";
+    static final String VERSION = "0.5";
 
     public static int betRequest(JsonElement request) {
         Gson gson = new Gson();
@@ -48,7 +48,7 @@ public class Player {
         for (Integer count : suits.values()) {
             if (count >= 5) flag = true;
         }
-        if (flag) return 50 + defaultBet; // getBetValue(relevantCards, ranks, suits);
+        if (flag) return defaultBet + getBetValue(relevantCards, ranks, suits);
         if (relevantCards.size() == 5) return 0;
         return 0;
     }
