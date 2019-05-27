@@ -7,7 +7,7 @@ import java.util.*;
 
 public class Player {
 
-    static final String VERSION = "1.1";
+    static final String VERSION = "1.2";
 
     public static int betRequest(JsonElement request) {
         Gson gson = new Gson();
