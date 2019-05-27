@@ -7,7 +7,7 @@ import java.util.*;
 
 public class Player {
 
-    static final String VERSION = "1.3";
+    static final String VERSION = "1.4";
 
     public static int betRequest(JsonElement request) {
         Gson gson = new Gson();
@@ -30,17 +30,10 @@ public class Player {
     }
 
     private static int getRaiseValue(GameState gameState, int defaultBet) {
-        List<Card> relevantCards = new ArrayList<>();
+        List<Card> relevantCards = new ArrayList<>(Arrays.asList(gameState.players[gameState.in_action].hole_cards));
         for (Card card:gameState.community_cards) {
             if (card != null) {
                 relevantCards.add(card);
-            }
-        }
-        relevantCards.addAll(Arrays.asList(gameState.players[gameState.in_action].hole_cards));
-        if (relevantCards.size() == 2) {
-            if (!relevantCards.get(0).rank.equals(relevantCards.get(1).rank))
-            {
-                return 0;
             }
         }
         Map<String, Integer> ranks = new HashMap<>();
@@ -49,16 +42,24 @@ public class Player {
             ranks.put(card.rank, ranks.getOrDefault(card.rank, 0) + 1);
             suits.put(card.suit, ranks.getOrDefault(card.suit, 0) + 1);
         }
-        boolean flag = false;
-        for (Integer count : ranks.values()) {
-            if (count > 1) flag = true;
+        if (gameState.bet_index == 0) {
+            return defaultBet;
+        } else if (inactivePlayers(gameState) >= 3) {
+            return defaultBet + 50;
+        } else if (relevantCards.get(0).getValue() >= 10 && relevantCards.get(0).rank.equals(relevantCards.get(1).rank)){
+            return defaultBet + getBetValue(relevantCards, ranks, suits);
         }
-        for (Integer count : suits.values()) {
-            if (count >= 4) flag = true;
-        }
-        if (flag) return defaultBet + getBetValue(relevantCards, ranks, suits);
-        if (relevantCards.size() == 5) return 0;
         return 0;
+    }
+
+    private static int inactivePlayers(GameState gameState) {
+        int count = 0;
+        for (PlayerState player : gameState.players) {
+            if (player.status.equals("out") || player.status.equals("folded")) {
+                count ++;
+            }
+        }
+        return count;
     }
 
     private static int getBetValue(List<Card> relevantCards, Map<String, Integer> ranks, Map<String, Integer> suits) {
