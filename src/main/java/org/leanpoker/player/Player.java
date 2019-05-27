@@ -54,6 +54,7 @@ public class Player {
     }
 
     private static int getBetValue(List<Card> relevantCards, Map<String, Integer> ranks, Map<String, Integer> suits) {
+        if (relevantCards.size() == 2) return 100;
         boolean hasTwo = false;
         boolean hasThree = false;
         boolean hasTwoPairs = false;
