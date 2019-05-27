@@ -7,7 +7,7 @@ import java.util.*;
 
 public class Player {
 
-    static final String VERSION = "1.0";
+    static final String VERSION = "1.1";
 
     public static int betRequest(JsonElement request) {
         Gson gson = new Gson();
@@ -73,6 +73,6 @@ public class Player {
         if (hasThree) return HandRanking.DRILL.bet;
         if (hasTwoPairs) return HandRanking.TWOPAIR.bet;
         if (hasTwo) return HandRanking.PAIR.bet;
-        return 0;
+        return 10;
     }
 }
