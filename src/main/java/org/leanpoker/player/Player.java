@@ -7,7 +7,7 @@ import java.util.*;
 
 public class Player {
 
-    static final String VERSION = "1.2";
+    static final String VERSION = "1.2.1";
 
     public static int betRequest(JsonElement request) {
         Gson gson = new Gson();
@@ -36,8 +36,8 @@ public class Player {
             {
                 return 0;
             }
+            if (gameState.current_buy_in > gameState.players[gameState.in_action].stack * 0.2) return 0;
         }
-        if (gameState.current_buy_in > gameState.players[gameState.in_action].stack * 0.2) return 0;
         Map<String, Integer> ranks = new HashMap<>();
         Map<String, Integer> suits = new HashMap<>();
         for (Card card : relevantCards) {
