@@ -13,13 +13,13 @@ public class Player {
         Gson gson = new Gson();
         GameState gameState = gson.fromJson(request,GameState.class);
         int defaultBet = gameState.current_buy_in - gameState.players[gameState.in_action].bet;
-        return getRaiseValue(gameState) + defaultBet;
+        return getRaiseValue(gameState, defaultBet);
     }
 
     public static void showdown(JsonElement game) {
     }
 
-    private static int getRaiseValue(GameState gameState) {
+    private static int getRaiseValue(GameState gameState, int defaultBet) {
         List<Card> relevantCards = new ArrayList<>();
         for (Card card:gameState.community_cards) {
             if (card != null) {
@@ -48,7 +48,7 @@ public class Player {
         for (Integer count : suits.values()) {
             if (count >= 5) flag = true;
         }
-        if (flag) return 50; // getBetValue(relevantCards, ranks, suits);
+        if (flag) return 50 + defaultBet; // getBetValue(relevantCards, ranks, suits);
         if (relevantCards.size() == 5) return 0;
         return 0;
     }
@@ -59,11 +59,19 @@ public class Player {
         boolean hasTwoPairs = false;
         for (Integer count : ranks.values()) {
             if (count == 4) return HandRanking.FOUROFAKIND.bet;
-            if (count == 3) return 0;
+            if (count == 3) hasThree = true;
+            if (count == 2) {
+                if (!hasTwo) { hasTwo = true; }
+                else {hasTwoPairs = true; }
+            }
         }
+        if (hasTwo && hasThree) return HandRanking.FULLHOUSE.bet;
         for (Integer count : suits.values()) {
             if (count >= 5) return HandRanking.FLUSH.bet;
         }
+        if (hasThree) return HandRanking.DRILL.bet;
+        if (hasTwoPairs) return HandRanking.TWOPAIR.bet;
+        if (hasTwo) return HandRanking.PAIR.bet;
         return 0;
     }
 }
