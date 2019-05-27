@@ -13,17 +13,13 @@ public class Player {
         Gson gson = new Gson();
         GameState gameState = gson.fromJson(request,GameState.class);
         int defaultBet = gameState.current_buy_in - gameState.players[gameState.in_action].bet + gameState.minimum_raise;
-        if (anythingGood(gameState)) {
-            return defaultBet + 50;
-        } else {
-            return defaultBet + 10;
-        }
+        return getRaiseValue(gameState) + defaultBet;
     }
 
     public static void showdown(JsonElement game) {
     }
 
-    private static boolean anythingGood(GameState gameState) {
+    private static int getRaiseValue(GameState gameState) {
         List<Card> relevantCards = new ArrayList<>();
         for (Card card:gameState.community_cards) {
             if (card != null) {
@@ -31,13 +27,22 @@ public class Player {
             }
         }
         relevantCards.addAll(Arrays.asList(gameState.players[gameState.in_action].hole_cards));
+        if (relevantCards.size() == 2) {
+            if (!((relevantCards.get(0).rank.equals(relevantCards.get(1).rank))
+                || (relevantCards.get(0).suit.equals(relevantCards.get(1).suit))
+                || (relevantCards.get(0).getValue() >= 10 && relevantCards.get(1).getValue() >= 10)))
+            {
+                return -1;
+            }
+        }
         Map<String, Integer> ranks = new HashMap<>();
         for (Card card : relevantCards) {
             ranks.put(card.rank, ranks.getOrDefault(card.rank, 0) + 1);
         }
         for (Integer count : ranks.values()) {
-            if (count > 1) return true;
+            if (count > 1) return 50;
         }
-        return false;
+        if (relevantCards.size() == 5) return -1;
+        return 0;
     }
 }
