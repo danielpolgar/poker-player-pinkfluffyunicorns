@@ -12,7 +12,7 @@ public class Player {
     public static int betRequest(JsonElement request) {
         Gson gson = new Gson();
         GameState gameState = gson.fromJson(request,GameState.class);
-        int defaultBet = gameState.current_buy_in - gameState.players[gameState.in_action].bet + gameState.minimum_raise;
+        int defaultBet = gameState.current_buy_in - gameState.players[gameState.in_action].bet;
         return getRaiseValue(gameState) + defaultBet;
     }
 
@@ -36,12 +36,19 @@ public class Player {
             }
         }
         Map<String, Integer> ranks = new HashMap<>();
+        Map<String, Integer> suits = new HashMap<>();
         for (Card card : relevantCards) {
             ranks.put(card.rank, ranks.getOrDefault(card.rank, 0) + 1);
+            suits.put(card.suit, ranks.getOrDefault(card.suit, 0) + 1);
         }
+        boolean flag = false;
         for (Integer count : ranks.values()) {
-            if (count > 1) return 50;
+            if (count > 1) flag = true;
         }
+        for (Integer count : suits.values()) {
+            if (count >= 5) flag = true;
+        }
+        if (flag) return 50 + gameState.minimum_raise;
         if (relevantCards.size() == 5) return -1;
         return 0;
     }
