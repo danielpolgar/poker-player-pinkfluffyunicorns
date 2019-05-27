@@ -32,7 +32,7 @@ public class Player {
                 || (relevantCards.get(0).suit.equals(relevantCards.get(1).suit))
                 || (relevantCards.get(0).getValue() >= 10 && relevantCards.get(1).getValue() >= 10)))
             {
-                return -1;
+                return 0;
             }
         }
         Map<String, Integer> ranks = new HashMap<>();
@@ -48,8 +48,22 @@ public class Player {
         for (Integer count : suits.values()) {
             if (count >= 5) flag = true;
         }
-        if (flag) return 50 + gameState.minimum_raise;
-        if (relevantCards.size() == 5) return -1;
+        if (flag) return 50; // getBetValue(relevantCards, ranks, suits);
+        if (relevantCards.size() == 5) return 0;
+        return 0;
+    }
+
+    private static int getBetValue(List<Card> relevantCards, Map<String, Integer> ranks, Map<String, Integer> suits) {
+        boolean hasTwo = false;
+        boolean hasThree = false;
+        boolean hasTwoPairs = false;
+        for (Integer count : ranks.values()) {
+            if (count == 4) return HandRanking.FOUROFAKIND.bet;
+            if (count == 3) return 0;
+        }
+        for (Integer count : suits.values()) {
+            if (count >= 5) return HandRanking.FLUSH.bet;
+        }
         return 0;
     }
 }
