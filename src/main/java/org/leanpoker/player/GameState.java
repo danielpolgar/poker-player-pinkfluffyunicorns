@@ -4,7 +4,7 @@ public class GameState {
     int round;
     int bet_index;
     int small_blind;
-    int current_by_in;
+    int current_buy_in;
     int pot;
     int minimum_raise;
     int dealer;
