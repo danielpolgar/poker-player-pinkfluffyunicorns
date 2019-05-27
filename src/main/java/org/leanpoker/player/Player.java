@@ -7,7 +7,7 @@ import java.util.*;
 
 public class Player {
 
-    static final String VERSION = "1.2.3";
+    static final String VERSION = "1.2.4";
 
     public static int betRequest(JsonElement request) {
         Gson gson = new Gson();
@@ -26,6 +26,7 @@ public class Player {
         for (Card card : gameState.community_cards) {
             System.err.println("  Common Card: " + card);
         }
+        System.err.println("  Stack: " + gameState.players[gameState.in_action].stack);
     }
 
     private static int getRaiseValue(GameState gameState, int defaultBet) {
