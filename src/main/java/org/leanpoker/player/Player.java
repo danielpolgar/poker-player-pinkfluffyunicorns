@@ -7,7 +7,7 @@ import java.util.*;
 
 public class Player {
 
-    static final String VERSION = "1.2.4";
+    static final String VERSION = "1.3";
 
     public static int betRequest(JsonElement request) {
         Gson gson = new Gson();
@@ -38,9 +38,7 @@ public class Player {
         }
         relevantCards.addAll(Arrays.asList(gameState.players[gameState.in_action].hole_cards));
         if (relevantCards.size() == 2) {
-            if (!((relevantCards.get(0).rank.equals(relevantCards.get(1).rank))
-                    || (relevantCards.get(0).suit.equals(relevantCards.get(1).suit))
-                    || (relevantCards.get(0).getValue() >= 10 && relevantCards.get(1).getValue() >= 10)))
+            if (!relevantCards.get(0).rank.equals(relevantCards.get(1).rank))
             {
                 return 0;
             }
