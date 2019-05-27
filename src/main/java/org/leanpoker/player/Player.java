@@ -46,7 +46,7 @@ public class Player {
             if (count > 1) flag = true;
         }
         for (Integer count : suits.values()) {
-            if (count >= 5) flag = true;
+            if (count >= 4) flag = true;
         }
         if (flag) return defaultBet + getBetValue(relevantCards, ranks, suits);
         if (relevantCards.size() == 5) return 0;
